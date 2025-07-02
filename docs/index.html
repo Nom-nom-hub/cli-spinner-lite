@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cli-spinner-lite - The Ultimate CLI Spinner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="logo.svg" type="image/svg+xml">
+    <style>
+        :root {
+            --bg-color: #1a1a2e;
+            --card-bg: #16213e;
+            --text-color: #e0e0e0;
+            --primary-color: #0f3460;
+            --accent-color: #e94560;
+            --code-bg: #0a1128;
+            --code-text: #e0e0e0;
+            --success-color: #98c379;
+            --error-color: #e06c75;
+            --border-color: #0f3460;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            margin-bottom: 40px;
+            border: 1px solid var(--border-color);
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: var(--accent-color);
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            text-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+
+        .btn-group {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            background-color: #ff6b81;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.5);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(233, 69, 96, 0.3);
+        }
+
+        #spinner-output {
+            margin-top: 40px;
+            font-size: 1.8em;
+            font-weight: bold;
+            min-height: 40px; /* To prevent layout shift */
+            min-width: 300px; /* Added to prevent layout shift */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-color);
+            transition: color 0.3s ease;
+        }
+
+        .code-block {
+            background-color: var(--code-bg);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: left;
+            margin-top: 30px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        pre {
+            margin: 0;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95em;
+            color: var(--code-text);
+            white-space: pre-wrap; /* Ensures code wraps */
+            word-break: break-all;
+        }
+
+        footer {
+            margin-top: 50px;
+            font-size: 0.9em;
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+            }
+            h1 {
+                font-size: 2.5em;
+            }
+            h2 {
+                font-size: 1.8em;
+            }
+            button {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="logo.svg" alt="cli-spinner-lite Logo" style="width: 150px; height: 150px; margin-bottom: 20px;">
+        <h1>cli-spinner-lite</h1>
+        <p>The ultimate zero-dependency utility for Node.js CLI tools. Elevate your command-line experience with stunning, animated spinners during asynchronous operations. Lightweight, powerful, and infinitely customizable.</p>
+        
+        <div class="btn-group">
+            <button onclick="runDemo('dots', 'blue', 5000, true, false)">Dots (Dynamic)</button>
+            <button onclick="runDemo('line', 'green', 4000, false, false)">Line</button>
+            <button onclick="runDemo('bounce', 'yellow', 3000, false, true)">Bounce (Error)</button>
+            <button onclick="runDemo('grow', 'cyan', 3500, true, false)">Grow (Update)</button>
+            <button onclick="runDemo('arc', 'magenta', 2500, false, false)">Arc</button>
+            <button onclick="runDemo('circle', 'red', 4500, true, false)">Circle (Dynamic)</button>
+            <button onclick="runDemo('star', 'white', 3000, false, false)">Star</button>
+        </div>
+        <div id="spinner-output"></div>
+
+        <h2>Key Features</h2>
+        <ul>
+            <li><strong>Zero Dependencies:</strong> Keep your project lean and fast.</li>
+            <li><strong>Highly Customizable:</strong> Control text, frames, intervals, and colors.</li>
+            <li><strong>Dynamic Updates:</strong> Change spinner text on the fly.</li>
+            <li><strong>Promise Integration:</strong> Seamlessly wrap async functions with `withSpinner`.</li>
+            <li><strong>Cross-Platform:</strong> Works flawlessly on macOS, Windows, and Linux.</li>
+            <li><strong>TypeScript Support:</strong> Full type definitions for modern development.</li>
+        </ul>
+
+        <h2>Installation</h2>
+        <div class="code-block">
+            <pre><code>npm install cli-spinner-lite</code></pre>
+        </div>
+
+        <h2>Usage Examples (Node.js)</h2>
+
+        <h3>Basic Spinner with Dynamic Text and Color</h3>
+        <div class="code-block">
+            <pre><code>
+const { Spinner } = require('cli-spinner-lite');
+const spinnerStyles = require('cli-spinner-lite/spinnerStyles');
+
+async function basicSpinnerDemo() {
+  console.log("--- Basic Spinner Demo ---");
+  const spinner = new Spinner({
+    text: 'Initializing core modules...',
+    frames: spinnerStyles.dots.frames,
+    interval: spinnerStyles.dots.interval,
+    color: 'blue' // Customizable color
+  });
+  spinner.start();
+  await new Promise(resolve => setTimeout(resolve, 2500));
+  spinner.updateText('Fetching remote configurations...'); // Dynamic text update
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  spinner.stop('✅ Core modules ready!'); // Stop with success message
+}
+
+basicSpinnerDemo();
+            </code></pre>
+        </div>
+
+        <h3>Using <code>withSpinner</code> for Promise Integration and Error Handling</h3>
+        <div class="code-block">
+            <pre><code>
+const { withSpinner } = require('cli-spinner-lite');
+const spinnerStyles = require('cli-spinner-lite/spinnerStyles');
+
+async function withSpinnerDemo() {
+  console.log("\n--- withSpinner Utility Demo ---");
+  try {
+    await withSpinner(async () => {
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Uncomment the line below to simulate an error:
+      // throw new Error("Critical sub-process failed!");
+    }, {
+      text: "Executing complex algorithms",
+      frames: spinnerStyles.line.frames,
+      interval: spinnerStyles.line.interval,
+      color: "green"
+    });
+  } catch (error) {
+    console.error(`❌ Operation failed: ${error.message}`); // Error handling
+  }
+}
+
+withSpinnerDemo();
+            </code></pre>
+        </div>
+
+        <h3>Chaining Multiple <code>withSpinner</code> Operations</h3>
+        <div class="code-block">
+            <pre><code>
+const { withSpinner } = require('cli-spinner-lite');
+const spinnerStyles = require('cli-spinner-lite/spinnerStyles');
+
+async function chainedSpinnersDemo() {
+  console.log("\n--- Chained Spinners Demo ---");
+  await withSpinner(async () => { await new Promise((resolve) => setTimeout(resolve, 1200)); }, { text: "Task A: Data validation", frames: spinnerStyles.bounce.frames, interval: spinnerStyles.bounce.interval, color: "yellow" });
+  await withSpinner(async () => { await new Promise((resolve) => setTimeout(resolve, 1200)); }, { text: "Task B: Database sync", frames: spinnerStyles.grow.frames, interval: spinnerStyles.grow.interval, color: "cyan" });
+  await withSpinner(async () => { await new Promise((resolve) => setTimeout(resolve, 1200)); }, { text: "Task C: Report generation", frames: spinnerStyles.arc.frames, interval: spinnerStyles.arc.interval, color: "magenta" });
+  console.log("✅ All chained tasks completed!");
+}
+
+chainedSpinnersDemo();
+            </code></pre>
+        </div>
+
+        <h3>Using a Custom Output Stream</h3>
+        <div class="code-block">
+            <pre><code>
+const { Spinner } = require('cli-spinner-lite');
+const spinnerStyles = require('cli-spinner-lite/spinnerStyles');
+
+async function customStreamDemo() {
+  console.log("\n--- Custom Stream Demo ---");
+  // Create a mock stream for demonstration (can be any WritableStream)
+  const mockStream = {
+    _buffer: "",
+    write(chunk) { this._buffer += chunk; },
+    clearLine() { this._buffer = ""; },
+    cursorTo() {},
+    getOutput() { return this._buffer; }
+  };
+  const spinner = new Spinner({
+    text: "Writing to mock stream",
+    frames: spinnerStyles.circle.frames,
+    interval: spinnerStyles.circle.interval,
+    stream: mockStream, // Direct output to custom stream
+    color: "red"
+  });
+  spinner.start();
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  spinner.stop("✅ Mock stream operation done!");
+  console.log("Mock stream content (last line):", mockStream.getOutput().split('\n').pop());
+}
+
+customStreamDemo();
+            </code></pre>
+        </div>
+
+        <h3>Running All Examples</h3>
+        <div class="code-block">
+            <pre><code>
+async function runAllExamples() {
+  await basicSpinnerDemo();
+  await withSpinnerDemo();
+  await chainedSpinnersDemo();
+  await customStreamDemo();
+  console.log("\n--- All Demos Complete ---");
+}
+
+runAllExamples();
+            </code></pre>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 cli-spinner-lite. All rights reserved. Licensed under ISC.
+    </footer>
+
+    <script>
+        // Simplified Spinner implementation for browser demo
+        class Spinner {
+            constructor({ text = "", interval = 100, frames = ["-", "\\", "|", "/"], color = "white", stream = null } = {}) {
+                this.text = text;
+                this.interval = interval;
+                this.frames = frames;
+                this.color = color;
+                this.stream = stream || document.getElementById('spinner-output'); // Use DOM element for output
+                this.currentFrame = 0;
+                this.timer = null;
+            }
+
+            _getColorStyle(colorName) {
+                const colors = {
+                    black: "#333", red: "#e06c75", green: "#98c379", yellow: "#e5c07b",
+                    blue: "#61afef", magenta: "#c678dd", cyan: "#56b6c2", white: "#abb2bf",
+                    gray: "#5c6370"
+                };
+                return colors[colorName.toLowerCase()] || colors.white;
+            }
+
+            start() {
+                if (this.timer) {
+                    return;
+                }
+
+                this.stream.textContent = ''; // Clear previous output
+                this.stream.style.color = this._getColorStyle(this.color);
+
+                const animate = () => {
+                    const frame = this.frames[this.currentFrame % this.frames.length];
+                    this.stream.textContent = `${frame} ${this.text}`;
+                    this.currentFrame++;
+                };
+
+                this.timer = setInterval(animate, this.interval);
+            }
+
+            stop(message) {
+                if (this.timer) {
+                    clearInterval(this.timer);
+                    this.timer = null;
+                }
+                this.stream.textContent = message || '';
+                this.stream.style.color = message && message.startsWith('✅') ? '#98c379' : '#e06c75'; // Green for success, red for error
+            }
+
+            updateText(newText) {
+                this.text = newText;
+            }
+        }
+
+        // Simplified spinnerStyles for browser demo
+        const spinnerStyles = {
+            dots: { frames: ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"], interval: 80 },
+            line: { frames: ["-", "\\", "|", "/"], interval: 100 },
+            bounce: { frames: ["⠁", "⠂", "⠄", "⠂", "⠁"], interval: 120 },
+            grow: { frames: [" ", "▃", "▄", "▅", "▆", "▇", "█", "▇", "▆", "▅", "▄", "▃"], interval: 90 },
+            arc: { frames: ["◜", "◠", "◝", "◞", "◡", "◟"], interval: 100 },
+            circle: { frames: ["◐", "◓", "◑", "◒"], interval: 120 },
+            star: { frames: ["✶", "✸", "✹", "✺", "✹", "✸"], interval: 150 }
+        };
+
+        async function runDemo(styleName, color, duration, updateTextMidway, simulateError) {
+            const spinnerOutput = document.getElementById('spinner-output');
+            spinnerOutput.textContent = 'Starting demo...';
+            spinnerOutput.style.color = '#abb2bf';
+
+            const style = spinnerStyles[styleName] || spinnerStyles.dots;
+            const initialText = `Running demo with ${styleName} style...`;
+            const updatedText = `Still working with ${styleName}...`;
+            const successMessage = `✅ Demo with ${styleName} completed!`;
+            const errorMessage = `❌ Demo with ${styleName} failed!`;
+
+            const spinner = new Spinner({
+                text: initialText,
+                frames: style.frames,
+                interval: style.interval,
+                color: color
+            });
+
+            spinner.start();
+
+            try {
+                await new Promise(resolve => setTimeout(resolve, duration / 2));
+
+                if (updateTextMidway) {
+                    spinner.updateText(updatedText);
+                    await new Promise(resolve => setTimeout(resolve, duration / 2));
+                } else {
+                    await new Promise(resolve => setTimeout(resolve, duration / 2));
+                }
+
+                if (simulateError) {
+                    throw new Error("Simulated error during demo!");
+                }
+
+                spinner.stop(successMessage);
+            } catch (error) {
+                spinner.stop(errorMessage + ` (${error.message})`);
+            }
+        }
+    </script>
+</body>
+</html>

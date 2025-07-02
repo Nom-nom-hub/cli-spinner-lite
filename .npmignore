@@ -2,8 +2,11 @@
 
 # Directories
 examples/
+docs/
 .vscode/
 .idea/
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
 
 # Files
 .gitignore
