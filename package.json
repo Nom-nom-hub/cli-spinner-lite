@@ -1,0 +1,22 @@
+{
+  "name": "cli-spinner-lite",
+  "version": "0.1.0",
+  "description": "A zero-dependency utility for Node.js CLI tools that displays animated spinners during asynchronous operations.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "demo": "node examples/demo.js"
+  },
+  "keywords": [
+    "spinner",
+    "CLI",
+    "terminal",
+    "loading",
+    "minimal"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=12"
+  }
+}
