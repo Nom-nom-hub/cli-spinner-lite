@@ -1,9 +1,13 @@
 declare module "cli-spinner-lite" {
+  type Color = "black" | "red" | "green" | "yellow" | "blue" | "magenta" | "cyan" | "white" | "gray" |
+               "brightRed" | "brightGreen" | "brightYellow" | "brightBlue" | "brightMagenta" | "brightCyan" | "brightWhite";
+
   interface SpinnerOptions {
     text?: string;
     interval?: number;
     frames?: string[];
-    color?: string;
+    spinnerColor?: Color;
+    textColor?: Color;
     stream?: NodeJS.WritableStream;
   }
 
@@ -15,7 +19,7 @@ declare module "cli-spinner-lite" {
   }
 
   function withSpinner<T>(
-    asyncFunction: () => Promise<T>,
+    asyncFunction: (spinner: Spinner) => Promise<T>,
     options?: SpinnerOptions
   ): Promise<T>;
 
@@ -36,6 +40,11 @@ declare module "cli-spinner-lite/spinnerStyles" {
     arc: SpinnerStyle;
     circle: SpinnerStyle;
     star: SpinnerStyle;
+    dots2: SpinnerStyle;
+    pipe: SpinnerStyle;
+    hamburger: SpinnerStyle;
+    arrow: SpinnerStyle;
+    bouncingBar: SpinnerStyle;
   }
 
   const spinnerStyles: SpinnerStyles;
